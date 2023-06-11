@@ -12,7 +12,7 @@ class loginPage extends StatefulWidget {
 }
 
 class _loginPageState extends State<loginPage> {
-  final _formkey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
 
   var email = "";
   var password = "";
@@ -69,7 +69,7 @@ class _loginPageState extends State<loginPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Form(
-        key: _formkey,
+        key: _formKey,
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 60.0, horizontal: 20.0),
           child: ListView(
@@ -134,7 +134,7 @@ class _loginPageState extends State<loginPage> {
                   children: [
                     ElevatedButton(
                       onPressed: () {
-                        if (_formkey.currentState!.validate()) {
+                        if (_formKey.currentState!.validate()) {
                           setState(() {
                             email = emailController.text;
                             password = passwordController.text;

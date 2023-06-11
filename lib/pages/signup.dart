@@ -1,5 +1,6 @@
 import 'package:attendance/pages/login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+// ignore: unnecessary_import
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -9,11 +10,19 @@ class Signup extends StatefulWidget {
 }
 
 class _SignupState extends State<Signup> {
-  final _formkey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
 
   var email = "";
   var password = "";
   var confirmPassword = "";
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    super.dispose();
+  }
 
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -36,7 +45,9 @@ class _SignupState extends State<Signup> {
         );
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => LoginPage()),
+          MaterialPageRoute(
+            builder: (context) => loginPage(),
+          ),
         );
       } on FirebaseAuthException catch (error) {
         if (error.code == 'weak-password') {
@@ -46,7 +57,7 @@ class _SignupState extends State<Signup> {
             const SnackBar(
               backgroundColor: Colors.black26,
               content: Text(
-                'Registered Successfully. Please Sign in',
+                'Password is too weak',
                 style: TextStyle(fontSize: 20.0, color: Colors.amberAccent),
               ),
             ),
@@ -58,13 +69,24 @@ class _SignupState extends State<Signup> {
             const SnackBar(
               backgroundColor: Colors.black26,
               content: Text(
-                'Registered Successfully. Please Sign in',
+                'Account is aleady exists',
                 style: TextStyle(fontSize: 20.0, color: Colors.amberAccent),
               ),
             ),
           );
         }
       }
+    } else {
+      print('Passord and Confirm Password does not match');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          backgroundColor: Colors.black26,
+          content: Text(
+            'Passord and Confirm Password does not match',
+            style: TextStyle(fontSize: 20.0, color: Colors.amberAccent),
+          ),
+        ),
+      );
     }
   }
 
@@ -73,7 +95,7 @@ class _SignupState extends State<Signup> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Form(
-        key: _formkey,
+        key: _formKey,
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 60.0, horizontal: 20.0),
           child: ListView(
@@ -109,12 +131,12 @@ class _SignupState extends State<Signup> {
                 ),
               ),
               Container(
-                margin: EdgeInsets.symmetric(vertical: 10.0),
+                margin: const EdgeInsets.symmetric(vertical: 10.0),
                 child: TextFormField(
                   autofocus: false,
                   obscureText: true,
                   decoration: const InputDecoration(
-                    labelText: 'Password',
+                    labelText: 'Password:',
                     labelStyle: TextStyle(fontSize: 20.0),
                     border: OutlineInputBorder(),
                     errorStyle: TextStyle(color: Colors.black26, fontSize: 15),
@@ -129,12 +151,12 @@ class _SignupState extends State<Signup> {
                 ),
               ),
               Container(
-                margin: EdgeInsets.symmetric(vertical: 10.0),
+                margin: const EdgeInsets.symmetric(vertical: 10.0),
                 child: TextFormField(
                   autofocus: false,
                   obscureText: true,
                   decoration: const InputDecoration(
-                    labelText: 'Password',
+                    labelText: 'Confirm Password:',
                     labelStyle: TextStyle(fontSize: 20.0),
                     border: OutlineInputBorder(),
                     errorStyle: TextStyle(color: Colors.black26, fontSize: 15),
@@ -148,12 +170,24 @@ class _SignupState extends State<Signup> {
                   },
                 ),
               ),
+              const SizedBox(
+                height: 15,
+              ),
               Container(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            setState(() {
+                              email = emailController.text;
+                              password = passwordController.text;
+                              confirmPassword = confirmPasswordController.text;
+                            });
+                            registration();
+                          }
+                        },
                         child: const Text(
                           'Signup',
                           style: TextStyle(fontSize: 18.0),
@@ -166,7 +200,18 @@ class _SignupState extends State<Signup> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Text('Already have an account?'),
-                    TextButton(onPressed: () {}, child: const Text('Login'))
+                    TextButton(
+                        onPressed: () {
+                          Navigator.pushReplacement(
+                            context,
+                            PageRouteBuilder(
+                              pageBuilder: (context, animation1, animation2) =>
+                                  const loginPage(),
+                              transitionDuration: const Duration(seconds: 0),
+                            ),
+                          );
+                        },
+                        child: const Text('Login'))
                   ],
                 ),
               )
