@@ -62,28 +62,30 @@ class _forgotPassState extends State<forgotPass> {
       body: Column(
         children: [
           const Padding(
-            padding: EdgeInsets.all(20.0),
+            padding: EdgeInsets.all(40.0),
             child: Image(
-              image: AssetImage('assets/images/signup.png'),
+              image: AssetImage('assets/images/forget.jpg'),
             ),
           ),
           Container(
-            margin: EdgeInsets.only(top: 20.0),
+            margin: EdgeInsets.only(top: 5.0),
             child: const Text(
               'Reset link will be send to your email ID!',
-              style: TextStyle(fontSize: 20.0),
+              style: TextStyle(fontSize: 15.0),
             ),
           ),
           Expanded(
               child: Form(
             key: _formKey,
             child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 10.0, horizontal: 30.0),
+              padding: const EdgeInsets.symmetric(
+                vertical: 10.0,
+                horizontal: 30.0,
+              ),
               child: ListView(
                 children: [
                   Container(
-                    margin: const EdgeInsets.symmetric(vertical: 10.0),
+                    margin: const EdgeInsets.symmetric(vertical: 5.0),
                     child: TextFormField(
                       autofocus: false,
                       decoration: const InputDecoration(
@@ -156,7 +158,7 @@ class _forgotPassState extends State<forgotPass> {
                                 ),
                                 (route) => false);
                           },
-                          child: Text('Signup'),
+                          child: const Text('Signup'),
                         )
                       ],
                     ),
