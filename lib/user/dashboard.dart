@@ -105,7 +105,7 @@ class _DashboardState extends State<Dashboard> {
                           color: Colors.black54),
                     ),
                     Text(
-                      "15:30",
+                      "--/--",
                       style: TextStyle(
                         fontFamily: "NexaBold",
                         fontSize: screenWidth / 18,
@@ -123,10 +123,12 @@ class _DashboardState extends State<Dashboard> {
                   text: "11",
                   style: TextStyle(
                     color: primary,
+                    fontSize: screenWidth / 20,
+                    fontFamily: "NexaBold",
                   ),
                   children: [
                     TextSpan(
-                        text: "jan 2023",
+                        text: " jan 2023",
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: screenWidth / 20,
@@ -138,7 +140,7 @@ class _DashboardState extends State<Dashboard> {
           Container(
             alignment: Alignment.centerLeft,
             child: Text(
-              "20:00:01 PM",
+              "12:00:01 PM",
               style: TextStyle(
                 fontFamily: "NexaRegular",
                 fontSize: screenWidth / 20,
@@ -146,12 +148,24 @@ class _DashboardState extends State<Dashboard> {
               ),
             ),
           ),
-          Builder(builder: (context) {
-            final GlobalKey<SlideActionState> key = GlobalKey();
-            return const SlideAction(
-              text: "Slide to Check in",
-            );
-          })
+          Container(
+            margin: EdgeInsets.only(top: 24),
+            child: Builder(builder: (context) {
+              final GlobalKey<SlideActionState> key = GlobalKey();
+              return SlideAction(
+                text: "Slide to Check Out",
+                textStyle: TextStyle(
+                  color: Colors.black54,
+                  fontSize: screenWidth / 20,
+                  fontFamily: "NexaReguler",
+                ),
+                key: key,
+                onSubmit: () {
+                  key.currentState!.reset();
+                },
+              );
+            }),
+          )
         ]),
       ),
     );
