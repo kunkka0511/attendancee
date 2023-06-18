@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:slide_to_act/slide_to_act.dart';
 
 class Dashboard extends StatefulWidget {
   @override
@@ -13,7 +13,7 @@ class _DashboardState extends State<Dashboard> {
   User? user = FirebaseAuth.instance.currentUser;
   double screenHeight = 0;
   double screenWidth = 0;
-  Color primary = Color.fromARGB(252, 61, 23, 157);
+  Color primary = const Color.fromARGB(251, 69, 21, 91);
   @override
   Widget build(BuildContext context) {
     screenHeight = MediaQuery.of(context).size.height;
@@ -158,18 +158,20 @@ class _DashboardState extends State<Dashboard> {
             },
           ),
           Container(
-            margin: const EdgeInsets.only(top: 24),
+            margin: EdgeInsets.only(top: 24),
             child: Builder(builder: (context) {
-              final GlobalKey<FormBuilderState> key = GlobalKey();
-
-              return FormBuilder(
-                key: key,
-                child: FormBuilderTextField(
-                  name: 'text',
-                  onChanged: (val) {
-                    print(val); // Print the text value write into TextField
-                  },
+              final GlobalKey<SlideActionState> key = GlobalKey();
+              return SlideAction(
+                text: "Slide to Check Out",
+                textStyle: TextStyle(
+                  color: Colors.black54,
+                  fontSize: screenWidth / 20,
+                  fontFamily: "NexaReguler",
                 ),
+                key: key,
+                onSubmit: () {
+                  key.currentState!.reset();
+                },
               );
             }),
           )
