@@ -168,9 +168,10 @@ class _DashboardState extends State<Dashboard> {
                   fontSize: screenWidth / 20,
                   fontFamily: "NexaReguler",
                 ),
+                innerColor: primary,
                 key: key,
                 onSubmit: () {
-                  key.currentState!.reset();
+                  print(DateFormat('hh:mm').format(DateTime.now()));
                 },
               );
             }),
