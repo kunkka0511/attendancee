@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:slide_to_act/slide_to_act.dart';
+import 'package:intl/intl.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 class Dashboard extends StatefulWidget {
   @override
@@ -7,9 +9,11 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
+  final email = FirebaseAuth.instance.currentUser!.email;
+  User? user = FirebaseAuth.instance.currentUser;
   double screenHeight = 0;
   double screenWidth = 0;
-  Color primary = Color(0xffeef44cc);
+  Color primary = Color.fromARGB(252, 61, 23, 157);
   @override
   Widget build(BuildContext context) {
     screenHeight = MediaQuery.of(context).size.height;
@@ -17,11 +21,11 @@ class _DashboardState extends State<Dashboard> {
 
     return Scaffold(
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         child: Column(children: [
           Container(
             alignment: Alignment.centerLeft,
-            margin: EdgeInsets.only(top: 32),
+            margin: const EdgeInsets.only(top: 32),
             child: Text(
               "Welcome",
               style: TextStyle(
@@ -34,10 +38,10 @@ class _DashboardState extends State<Dashboard> {
           Container(
             alignment: Alignment.centerLeft,
             child: Text(
-              "Employee",
+              'Name: $email',
               style: TextStyle(
                 fontFamily: "NexaBold",
-                fontSize: screenWidth / 18,
+                fontSize: screenWidth / 30,
               ),
             ),
           ),
@@ -120,7 +124,7 @@ class _DashboardState extends State<Dashboard> {
             alignment: Alignment.centerLeft,
             child: RichText(
               text: TextSpan(
-                  text: "11",
+                  text: DateTime.now().day.toString(),
                   style: TextStyle(
                     color: primary,
                     fontSize: screenWidth / 20,
@@ -128,7 +132,7 @@ class _DashboardState extends State<Dashboard> {
                   ),
                   children: [
                     TextSpan(
-                        text: " jan 2023",
+                        text: DateFormat(' MMMM yyyy').format(DateTime.now()),
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: screenWidth / 20,
@@ -137,32 +141,35 @@ class _DashboardState extends State<Dashboard> {
                   ]),
             ),
           ),
-          Container(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              "12:00:01 PM",
-              style: TextStyle(
-                fontFamily: "NexaRegular",
-                fontSize: screenWidth / 20,
-                color: Colors.black54,
-              ),
-            ),
+          StreamBuilder(
+            stream: Stream.periodic(Duration(seconds: 1)),
+            builder: (context, snapshot) {
+              return Container(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  DateFormat('hh:mm:ss a').format(DateTime.now()),
+                  style: TextStyle(
+                    fontFamily: "NexaRegular",
+                    fontSize: screenWidth / 20,
+                    color: Colors.black54,
+                  ),
+                ),
+              );
+            },
           ),
           Container(
-            margin: EdgeInsets.only(top: 24),
+            margin: const EdgeInsets.only(top: 24),
             child: Builder(builder: (context) {
-              final GlobalKey<SlideActionState> key = GlobalKey();
-              return SlideAction(
-                text: "Slide to Check Out",
-                textStyle: TextStyle(
-                  color: Colors.black54,
-                  fontSize: screenWidth / 20,
-                  fontFamily: "NexaReguler",
-                ),
+              final GlobalKey<FormBuilderState> key = GlobalKey();
+
+              return FormBuilder(
                 key: key,
-                onSubmit: () {
-                  key.currentState!.reset();
-                },
+                child: FormBuilderTextField(
+                  name: 'text',
+                  onChanged: (val) {
+                    print(val); // Print the text value write into TextField
+                  },
+                ),
               );
             }),
           )

@@ -54,7 +54,8 @@ class _ProfileState extends State<Profile> {
                 ),
                 Text(
                   uid,
-                  style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w300),
+                  style: const TextStyle(
+                      fontSize: 18.0, fontWeight: FontWeight.w300),
                 ),
               ],
             ),
