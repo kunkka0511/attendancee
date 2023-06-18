@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -10,7 +11,7 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   final email = FirebaseAuth.instance.currentUser!.email;
-  User? user = FirebaseAuth.instance.currentUser;
+
   double screenHeight = 0;
   double screenWidth = 0;
   Color primary = const Color.fromARGB(251, 69, 21, 91);
@@ -88,7 +89,7 @@ class _DashboardState extends State<Dashboard> {
                           color: Colors.black54),
                     ),
                     Text(
-                      "09;30",
+                      "09:30",
                       style: TextStyle(
                         fontFamily: "NexaBold",
                         fontSize: screenWidth / 18,
@@ -170,8 +171,19 @@ class _DashboardState extends State<Dashboard> {
                 ),
                 innerColor: primary,
                 key: key,
-                onSubmit: () {
+                onSubmit: () async {
                   print(DateFormat('hh:mm').format(DateTime.now()));
+
+                  QuerySnapshot snap =
+                      await FirebaseFirestore.instance.collection("Name").get();
+                  print(snap.docs[0].id);
+
+                  FirebaseFirestore.instance
+                      .collection("Name")
+                      .doc(snap.docs[0].id)
+                      .collection("Record")
+                      .doc(DateFormat('dd MMMM yyyy').format(DateTime.now()));
+                  // Rest of your code
                 },
               );
             }),

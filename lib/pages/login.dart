@@ -16,6 +16,7 @@ class _loginPageState extends State<loginPage> {
 
   var email = "";
   var password = "";
+  var id = "";
 
   final emailController = TextEditingController();
   final passwordController = TextEditingController();

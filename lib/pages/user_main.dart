@@ -1,7 +1,10 @@
 import 'package:attendance/user/change_pass.dart';
 import 'package:attendance/user/dashboard.dart';
 import 'package:attendance/user/profile.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+
+import 'package:attendance/model/user.dart';
 
 class UserMain extends StatefulWidget {
   const UserMain({super.key});
@@ -22,6 +25,33 @@ class _UserMainState extends State<UserMain> {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    ((value) {
+      _getCredentials();
+      _getProfilePic();
+    });
+  }
+
+  void _getCredentials() async {
+    try {
+      DocumentSnapshot doc = await FirebaseFirestore.instance
+          .collection("Name")
+          .doc(User.id)
+          .get();
+      setState(() {});
+    } catch (e) {
+      return;
+    }
+  }
+
+  void _getProfilePic() async {
+    DocumentSnapshot doc =
+        await FirebaseFirestore.instance.collection("Name").doc(User.id).get();
+    setState(() {});
   }
 
   @override

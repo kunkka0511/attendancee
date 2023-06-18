@@ -36,7 +36,9 @@ dependencies:
   firebase_auth_platform_interface: 6.15.3
   slide_to_act: ^2.0.1
   intl: ^0.18.1
-  
+  cloud_firestore: ^4.8.1
+  shared_preferences: ^2.1.2
+  flutter_keyboard_visibility: ^5.4.1
 
   
 
