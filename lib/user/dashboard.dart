@@ -11,6 +11,7 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   final email = FirebaseAuth.instance.currentUser!.email;
+  final uid = FirebaseAuth.instance.currentUser!.uid;
 
   double screenHeight = 0;
   double screenWidth = 0;
@@ -175,11 +176,11 @@ class _DashboardState extends State<Dashboard> {
                   print(DateFormat('hh:mm').format(DateTime.now()));
 
                   QuerySnapshot snap =
-                      await FirebaseFirestore.instance.collection("Name").get();
+                      await FirebaseFirestore.instance.collection("Uid").get();
                   print(snap.docs[0].id);
 
                   FirebaseFirestore.instance
-                      .collection("Name")
+                      .collection("Uid")
                       .doc(snap.docs[0].id)
                       .collection("Record")
                       .doc(DateFormat('dd MMMM yyyy').format(DateTime.now()));
