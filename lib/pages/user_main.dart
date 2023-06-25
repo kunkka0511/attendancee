@@ -54,6 +54,17 @@ class _UserMainState extends State<UserMain> {
     setState(() {});
   }
 
+  Future<void> getId() async {
+    QuerySnapshot snap = await FirebaseFirestore.instance
+        .collection("Name")
+        .where('email', isEqualTo: User.id)
+        .get();
+
+    setState(() {
+      snap.docs[0].id;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

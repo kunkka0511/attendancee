@@ -54,9 +54,9 @@ class _AuthCheckState extends State<AuthCheck> {
     sharedPreferences = await SharedPreferences.getInstance();
 
     try {
-      if (sharedPreferences.getString('Uid') != null) {
+      if (sharedPreferences.getString('Name') != null) {
         setState(() {
-          User.username = sharedPreferences.getString('Uid')!;
+          User.username = sharedPreferences.getString('Name')!;
           userAvailable = true;
         });
       }

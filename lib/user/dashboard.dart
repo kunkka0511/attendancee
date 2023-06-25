@@ -15,6 +15,9 @@ class _DashboardState extends State<Dashboard> {
 
   double screenHeight = 0;
   double screenWidth = 0;
+  String checkIn = "--/--";
+  String checkOut = "--/--";
+
   Color primary = const Color.fromARGB(251, 69, 21, 91);
   @override
   Widget build(BuildContext context) {
@@ -90,7 +93,7 @@ class _DashboardState extends State<Dashboard> {
                           color: Colors.black54),
                     ),
                     Text(
-                      "09:30",
+                      "checkIn",
                       style: TextStyle(
                         fontFamily: "NexaBold",
                         fontSize: screenWidth / 18,
@@ -111,7 +114,7 @@ class _DashboardState extends State<Dashboard> {
                           color: Colors.black54),
                     ),
                     Text(
-                      "--/--",
+                      "checkOut",
                       style: TextStyle(
                         fontFamily: "NexaBold",
                         fontSize: screenWidth / 18,
@@ -160,11 +163,13 @@ class _DashboardState extends State<Dashboard> {
             },
           ),
           Container(
-            margin: EdgeInsets.only(top: 24),
+            margin: const EdgeInsets.only(top: 24),
             child: Builder(builder: (context) {
               final GlobalKey<SlideActionState> key = GlobalKey();
               return SlideAction(
-                text: "Slide to Check Out",
+                text: checkIn == "--/--"
+                    ? "Slide to Check Out"
+                    : "Slide to Check Out",
                 textStyle: TextStyle(
                   color: Colors.black54,
                   fontSize: screenWidth / 20,
@@ -173,17 +178,41 @@ class _DashboardState extends State<Dashboard> {
                 innerColor: primary,
                 key: key,
                 onSubmit: () async {
-                  print(DateFormat('hh:mm').format(DateTime.now()));
-
-                  QuerySnapshot snap =
-                      await FirebaseFirestore.instance.collection("Uid").get();
-                  print(snap.docs[0].id);
-
-                  FirebaseFirestore.instance
-                      .collection("Uid")
+                  QuerySnapshot snap = await FirebaseFirestore.instance
+                      .collection("Name")
+                      .where('email', isEqualTo: email)
+                      .get();
+                  DocumentSnapshot snap2 = await FirebaseFirestore.instance
+                      .collection("Name")
                       .doc(snap.docs[0].id)
                       .collection("Record")
-                      .doc(DateFormat('dd MMMM yyyy').format(DateTime.now()));
+                      .doc(DateFormat('dd MMMM yyyy').format(DateTime.now()))
+                      .get();
+
+                  try {
+                    String checkIn = snap2['checkIn'];
+
+                    setState(() {
+                      checkOut = DateFormat('hh:mm').format(DateTime.now());
+                    });
+
+                    await FirebaseFirestore.instance
+                        .collection("Name")
+                        .doc(snap.docs[0].id)
+                        .collection("Record")
+                        .doc(DateFormat('dd MMMM yyyy').format(DateTime.now()))
+                        .update({
+                      'date': Timestamp.now(),
+                      'checkIn': checkIn,
+                      'checkOut': DateFormat('hh:mm').format(DateTime.now()),
+                    });
+                  } catch (e) {
+                    // Handle the exception here
+                    print('An error occurred: $e');
+                  }
+
+                  key.currentState!.reset();
+
                   // Rest of your code
                 },
               );

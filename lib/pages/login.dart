@@ -1,6 +1,7 @@
 import 'package:attendance/pages/forget_pass.dart';
 import 'package:attendance/pages/signup.dart';
 import 'package:attendance/pages/user_main.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -56,6 +57,17 @@ class _loginPageState extends State<loginPage> {
         );
       }
     }
+  }
+
+  Future<void> getId() async {
+    QuerySnapshot snap = await FirebaseFirestore.instance
+        .collection("Name")
+        .where('email', isEqualTo: email)
+        .get();
+
+    setState(() {
+      snap.docs[0].id;
+    });
   }
 
   @override
