@@ -20,6 +20,36 @@ class _DashboardState extends State<Dashboard> {
 
   Color primary = const Color.fromARGB(251, 69, 21, 91);
   @override
+  void initState() {
+    super.initState();
+    _getRecord();
+  }
+
+  void _getRecord() async {
+    try {
+      QuerySnapshot snap = await FirebaseFirestore.instance
+          .collection("Name")
+          .where('email', isEqualTo: email)
+          .get();
+      DocumentSnapshot snap2 = await FirebaseFirestore.instance
+          .collection("Name")
+          .doc(snap.docs[0].id)
+          .collection("Record")
+          .doc(DateFormat('dd MMMM yyyy').format(DateTime.now()))
+          .get();
+      setState(() {
+        checkIn = snap2['checkIn'];
+        checkOut = snap2['checkOut'];
+      });
+    } catch (e) {
+      setState(() {
+        checkIn = "--/--";
+        checkOut = "--/--";
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     screenHeight = MediaQuery.of(context).size.height;
     screenWidth = MediaQuery.of(context).size.width;
@@ -93,7 +123,7 @@ class _DashboardState extends State<Dashboard> {
                           color: Colors.black54),
                     ),
                     Text(
-                      "checkIn",
+                      checkIn,
                       style: TextStyle(
                         fontFamily: "NexaBold",
                         fontSize: screenWidth / 18,
@@ -114,7 +144,7 @@ class _DashboardState extends State<Dashboard> {
                           color: Colors.black54),
                     ),
                     Text(
-                      "checkOut",
+                      checkOut,
                       style: TextStyle(
                         fontFamily: "NexaBold",
                         fontSize: screenWidth / 18,
