@@ -4,6 +4,7 @@ import 'package:attendance/pages/user_main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class loginPage extends StatefulWidget {
   const loginPage({super.key});
@@ -21,12 +22,24 @@ class _loginPageState extends State<loginPage> {
 
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-
+  late SharedPreferences sharedPreferences;
   Future<void> userLogin() async {
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
         password: password,
+      );
+      GestureDetector(
+        onTap: () async {
+          String email = emailController.text.trim();
+          String password = passwordController.text.trim();
+
+          QuerySnapshot snap = await FirebaseFirestore.instance
+              .collection("Name")
+              .where('email', isEqualTo: email)
+              .get();
+          print(snap.docs[0]['email']);
+        },
       );
       Navigator.pushReplacement(
         context,
