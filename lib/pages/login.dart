@@ -29,18 +29,7 @@ class _loginPageState extends State<loginPage> {
         email: email,
         password: password,
       );
-      GestureDetector(
-        onTap: () async {
-          String email = emailController.text.trim();
-          String password = passwordController.text.trim();
 
-          QuerySnapshot snap = await FirebaseFirestore.instance
-              .collection("Name")
-              .where('email', isEqualTo: email)
-              .get();
-          print(snap.docs[0]['email']);
-        },
-      );
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const UserMain()),
