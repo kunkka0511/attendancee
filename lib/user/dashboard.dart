@@ -198,7 +198,7 @@ class _DashboardState extends State<Dashboard> {
               final GlobalKey<SlideActionState> key = GlobalKey();
               return SlideAction(
                 text: checkIn == "--/--"
-                    ? "Slide to Check Out"
+                    ? "Slide to Check in"
                     : "Slide to Check Out",
                 textStyle: TextStyle(
                   color: Colors.black54,
