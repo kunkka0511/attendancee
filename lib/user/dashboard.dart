@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -27,19 +29,23 @@ class _DashboardState extends State<Dashboard> {
 
   void _getRecord() async {
     try {
-      QuerySnapshot snap = await FirebaseFirestore.instance
-          .collection("Name")
-          .where('email', isEqualTo: email)
+      FirebaseAuth auth = FirebaseAuth.instance;
+      print(auth.currentUser!.uid);
+      var name = await FirebaseFirestore.instance
+          .collection('Name')
+          .doc(auth.currentUser!.uid)
           .get();
-      DocumentSnapshot snap2 = await FirebaseFirestore.instance
+      Map<String, dynamic> data = name.data()!;
+
+      var name2 = await FirebaseFirestore.instance
           .collection("Name")
-          .doc(snap.docs[0].id)
+          .doc(auth.currentUser!.uid)
           .collection("Record")
           .doc(DateFormat('dd MMMM yyyy').format(DateTime.now()))
           .get();
       setState(() {
-        checkIn = snap2['checkIn'];
-        checkOut = snap2['checkOut'];
+        checkIn = name2['checkIn'];
+        checkOut = name2['checkOut'];
       });
     } catch (e) {
       setState(() {
@@ -177,7 +183,7 @@ class _DashboardState extends State<Dashboard> {
             ),
           ),
           StreamBuilder(
-            stream: Stream.periodic(Duration(seconds: 1)),
+            stream: Stream.periodic(const Duration(seconds: 1)),
             builder: (context, snapshot) {
               return Container(
                 alignment: Alignment.centerLeft,
@@ -192,62 +198,90 @@ class _DashboardState extends State<Dashboard> {
               );
             },
           ),
-          Container(
-            margin: const EdgeInsets.only(top: 24),
-            child: Builder(builder: (context) {
-              final GlobalKey<SlideActionState> key = GlobalKey();
-              return SlideAction(
-                text: checkIn == "--/--"
-                    ? "Slide to Check in"
-                    : "Slide to Check Out",
-                textStyle: TextStyle(
-                  color: Colors.black54,
-                  fontSize: screenWidth / 20,
-                  fontFamily: "NexaReguler",
+          checkOut == "--/--"
+              ? Container(
+                  margin: const EdgeInsets.only(top: 24),
+                  child: Builder(builder: (context) {
+                    final GlobalKey<SlideActionState> key = GlobalKey();
+                    return SlideAction(
+                      text: checkIn == "--/--"
+                          ? "Slide to Check in"
+                          : "Slide to Check Out",
+                      textStyle: TextStyle(
+                        color: Colors.black54,
+                        fontSize: screenWidth / 20,
+                        fontFamily: "NexaReguler",
+                      ),
+                      innerColor: primary,
+                      key: key,
+                      onSubmit: () async {
+                        FirebaseAuth auth = FirebaseAuth.instance;
+                        print(auth.currentUser!.uid);
+                        var name = await FirebaseFirestore.instance
+                            .collection('Name')
+                            .doc(auth.currentUser!.uid)
+                            .get();
+
+                        Map<String, dynamic> data = name.data()!;
+                        var name2 = await FirebaseFirestore.instance
+                            .collection("Name")
+                            .doc(auth.currentUser!.uid)
+                            .collection("Record")
+                            .doc(DateFormat('dd MMMM yyyy')
+                                .format(DateTime.now()))
+                            .get();
+
+                        try {
+                          String checkIn = name2['checkIn'];
+                          setState(() {
+                            checkOut =
+                                DateFormat('hh:mm').format(DateTime.now());
+                          });
+                          await FirebaseFirestore.instance
+                              .collection("Name")
+                              .doc(auth.currentUser!.uid)
+                              .collection("Record")
+                              .doc(DateFormat('dd MMMM yyyy')
+                                  .format(DateTime.now()))
+                              .update({
+                            'checkIn': checkIn,
+                            'checkOut':
+                                DateFormat('hh:mm').format(DateTime.now())
+                          });
+                        } catch (e) {
+                          setState(() {
+                            checkIn =
+                                DateFormat('hh:mm').format(DateTime.now());
+                          });
+                          await FirebaseFirestore.instance
+                              .collection("Name")
+                              .doc(auth.currentUser!.uid)
+                              .collection("Record")
+                              .doc(DateFormat('dd MMMM yyyy')
+                                  .format(DateTime.now()))
+                              .set(
+                            {
+                              'checkIn': DateFormat('hh:mm').format(
+                                DateTime.now(),
+                              )
+                            },
+                          );
+                        }
+                      },
+                    );
+                  }),
+                )
+              : Container(
+                  margin: const EdgeInsets.only(top: 32, bottom: 32),
+                  child: Text(
+                    "You have completed this day!",
+                    style: TextStyle(
+                      fontFamily: "NexaRegular",
+                      fontSize: screenWidth / 20,
+                      color: const Color.fromARGB(137, 15, 20, 97),
+                    ),
+                  ),
                 ),
-                innerColor: primary,
-                key: key,
-                onSubmit: () async {
-                  QuerySnapshot snap = await FirebaseFirestore.instance
-                      .collection("Name")
-                      .where('email', isEqualTo: email)
-                      .get();
-                  DocumentSnapshot snap2 = await FirebaseFirestore.instance
-                      .collection("Name")
-                      .doc(snap.docs[0].id)
-                      .collection("Record")
-                      .doc(DateFormat('dd MMMM yyyy').format(DateTime.now()))
-                      .get();
-
-                  try {
-                    String checkIn = snap2['checkIn'];
-
-                    setState(() {
-                      checkOut = DateFormat('hh:mm').format(DateTime.now());
-                    });
-
-                    await FirebaseFirestore.instance
-                        .collection("Name")
-                        .doc(snap.docs[0].id)
-                        .collection("Record")
-                        .doc(DateFormat('dd MMMM yyyy').format(DateTime.now()))
-                        .update({
-                      'date': Timestamp.now(),
-                      'checkIn': checkIn,
-                      'checkOut': DateFormat('hh:mm').format(DateTime.now()),
-                    });
-                  } catch (e) {
-                    // Handle the exception here
-                    print('An error occurred: $e');
-                  }
-
-                  key.currentState!.reset();
-
-                  // Rest of your code
-                },
-              );
-            }),
-          )
         ]),
       ),
     );

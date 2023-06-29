@@ -20,8 +20,9 @@ class _loginPageState extends State<loginPage> {
   var password = "";
   var id = "";
 
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
+  final emailController =
+      TextEditingController(text: 'Onoltdovchko00@gmail.com');
+  final passwordController = TextEditingController(text: 'kewa11');
 
   Future<void> userLogin() async {
     try {
@@ -29,6 +30,7 @@ class _loginPageState extends State<loginPage> {
         email: email,
         password: password,
       );
+
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const UserMain()),
