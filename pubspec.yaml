@@ -35,11 +35,17 @@ dependencies:
   firebase_auth: ^4.6.3
   firebase_auth_platform_interface: 6.15.3
   slide_to_act: ^2.0.1
-  intl: ^0.18.1
+  intl: ^0.18.0
   cloud_firestore: ^4.8.1
   shared_preferences: ^2.1.2
   flutter_keyboard_visibility: ^5.4.1
-  
+  month_year_picker: ^0.3.0+1
+  font_awesome_flutter: ^10.5.0
+  flutter_barcode_scanner: ^2.0.0
+  geocoding: ^2.1.0
+  image_picker: ^1.0.0
+  firebase_storage: ^11.2.4
+  location: ^4.4.0
   
   
 
