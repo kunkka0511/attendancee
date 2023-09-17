@@ -222,7 +222,7 @@ class _DashboardState extends State<Dashboard> {
                             .doc(auth.currentUser!.uid)
                             .get();
 
-                        Map<String, dynamic> data = name.data()!;
+                        
                         var name2 = await FirebaseFirestore.instance
                             .collection("Name")
                             .doc(auth.currentUser!.uid)
