@@ -18,7 +18,7 @@ class _UserMainState extends State<UserMain> {
 
   static final List<Widget> _widgetOptions = <Widget>[
     Dashboard(),
-    Profile(),
+    const Profile(),
     ChangePass(),
   ];
   void _onItemTapped(int index) {
