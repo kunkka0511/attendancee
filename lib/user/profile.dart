@@ -127,12 +127,8 @@ class _ProfileState extends State<Profile> {
                     return ListView.builder(
                       itemCount: snap.length,
                       itemBuilder: (context, index) {
-                        var snapsh = snap[index].data() as Map<String ,dynamic>;
-                        
-                        return DateFormat('MMMM')
-                                    .format(snap[index].id.toString() as DateTime) ==
-                                _month
-                            ? Container(
+                        var snapsh = snap[index].data() as Map<String ,dynamic>;            
+                        return DateFormat('MMMM').format(snap[index]['date'].toDate()) == _month ?Container(
                                 margin: EdgeInsets.only(
                                     top: index > 0 ? 12 : 0, left: 6, right: 6),
                                 height: 150,
