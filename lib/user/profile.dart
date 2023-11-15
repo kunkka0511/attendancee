@@ -26,7 +26,7 @@ class _ProfileState extends State<Profile> {
 
     var name = FirebaseFirestore.instance;
     var auth;
-    return Scaffold(
+     return Scaffold(
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -235,5 +235,4 @@ class _ProfileState extends State<Profile> {
         ),
       ),
     );
-  }
-}
+  }}

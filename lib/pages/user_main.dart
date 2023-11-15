@@ -3,6 +3,7 @@ import 'package:attendance/user/dashboard.dart';
 import 'package:attendance/user/profile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:attendance/user/admin.dart';
 
 import 'package:attendance/model/user.dart';
 
@@ -20,6 +21,7 @@ class _UserMainState extends State<UserMain> {
     Dashboard(),
     const Profile(),
     ChangePass(),
+    admin(),
   ];
   void _onItemTapped(int index) {
     setState(() {
@@ -76,13 +78,14 @@ class _UserMainState extends State<UserMain> {
               label: 'Dashboard',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              label: 'Profile',
+              icon: Icon(Icons.calendar_month),
+              label: 'attendance',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.settings),
               label: 'Change Password',
             ),
+            
           ],
           currentIndex: _selectedIndex,
           selectedItemColor: Colors.blue,
